@@ -1,2 +1,4 @@
 #!/usr/bin/env bash
+# This script displays all listening sockets, with PIDs and process names
+
 sudo netstat -lpn
