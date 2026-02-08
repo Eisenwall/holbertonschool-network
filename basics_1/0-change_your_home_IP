@@ -1,8 +1,14 @@
 #!/usr/bin/env bash
 # This script configures /etc/hosts to redirect localhost and facebook.com
 
-# Replace the default 127.0.0.1 for localhost with 127.0.0.2
-sudo sed -i 's/127.0.0.1\tlocalhost/127.0.0.2\tlocalhost/g' /etc/hosts
+# Change localhost from 127.0.0.1 to 127.0.0.2
+# We use a method that works even if /etc/hosts is a mounted resource
+sed 's/127.0.0.1/127.0.0.2/' /etc/hosts | sudo tee /etc/hosts > /dev/null
 
-# Append a rule to redirect facebook.com to 8.8.8.8
-echo -e "8.8.8.8\tfacebook.com" | sudo tee -a /etc/hosts > /dev/null
+# Append facebook.com resolution if it doesn't already exist
+# Or replace it if it does
+if grep -q "facebook.com" /etc/hosts; then
+    sed 's/.*facebook.com/8.8.8.8 facebook.com/' /etc/hosts | sudo tee /etc/hosts > /dev/null
+else
+    echo "8.8.8.8 facebook.com" | sudo tee -a /etc/hosts > /dev/null
+fi
