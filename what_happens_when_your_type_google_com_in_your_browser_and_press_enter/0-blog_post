@@ -1,0 +1,37 @@
+The Deep Dive: What Happens When You Type https://www.google.com/search?q=google.com in Your Browser?
+
+The simple act of typing a URL and hitting "Enter" feels instantaneous, but behind the scenes, a complex relay race is happening across the globe. To understand how the modern web works, we need to peel back the layers of the infrastructure. Here is the step-by-step journey of a request.
+1. Finding the Address: DNS Request
+
+Computers don't understand names like "https://www.google.com/search?q=google.com"; they communicate via IP addresses. The Domain Name System (DNS) is the internet's equivalent of a phonebook.
+
+    Your browser checks its local cache to see if it already knows the IP.
+
+    If not, it asks your OS, which then queries a Resolver (usually provided by your ISP).
+
+    The request may travel to Root, TLD, and Authoritative Name Servers until it finally returns an IP address like 142.250.190.46.
+
+2. Establishing the Connection: TCP/IP
+
+Once the browser has the IP address, it needs a reliable connection to the server. This is handled by the TCP/IP (Transmission Control Protocol/Internet Protocol). Using a process called the "Three-Way Handshake", the client and server exchange synchronization and acknowledgment packets to ensure they are ready to talk without data loss.
+3. The Security Gate: Firewall
+
+Before any data reaches the server, it must pass through a Firewall. This is a security barrier that filters traffic. It checks if the incoming request is coming from a safe source and is directed to an allowed port (like Port 443 for HTTPS). If the request looks suspicious, the firewall drops it immediately.
+4. Encrypting the Conversation: HTTPS/SSL
+
+Since security is a priority, the connection is upgraded using SSL (Secure Sockets Layer) or its successor, TLS. During the SSL Handshake, the server shares its public key and a certificate. Your browser verifies this certificate with a trusted authority. Once verified, an encrypted "tunnel" is created. This ensures that even if someone intercepts your data, they cannot read it.
+5. Managing the Crowd: Load-balancer
+
+Google receives millions of hits per second. A single server would fail under this pressure. A Load-balancer (like HAProxy or Nginx) sits in front of the server farm. It acts as a traffic controller, distributing incoming requests across multiple servers to ensure no single machine is overwhelmed.
+6. Delivering the Foundation: Web Server
+
+The request finally hits a Web Server. This software (like Apache or Nginx) is responsible for serving static content—the HTML files, CSS stylesheets, and images that make up the basic structure of the page.
+7. The Logic Engine: Application Server
+
+Most modern websites are dynamic. If you are searching for something, the Web Server hands the request to an Application Server. This is where the "business logic" lives. It runs code (Python, Go, Java, etc.) to process your specific request, check your cookies, or handle your search query.
+8. The Knowledge Base: Database
+
+Finally, the Application Server often needs to pull information from a Database (like MySQL, PostgreSQL, or Google's Bigtable). The database stores all the persistent data. Once the Application Server gets the data it needs, it builds a complete response and sends it back through the stack to your browser.
+Summary
+
+It’s a long journey: from DNS resolution to TCP handshakes, through Firewalls, SSL encryption, Load Balancers, and multiple layers of Servers. Yet, all of this happens in the blink of an eye, bringing the world’s information to your screen.
